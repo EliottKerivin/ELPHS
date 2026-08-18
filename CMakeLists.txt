@@ -8,7 +8,8 @@ if(Doxygen_FOUND)
   include(FetchContent)
     FetchContent_Declare(
       doxygen-awesome-css
-      URL https://github.com/jothepro/doxygen-awesome-css/archive/refs/heads/main.zip
+      GIT_REPOSITORY https://github.com/jothepro/doxygen-awesome-css
+      GIT_TAG d52eafe3e9303399fda15661f3d7bb8fe3d7eabc # v2.4.2
   )
   FetchContent_MakeAvailable(doxygen-awesome-css)
   # Save the location the files were cloned into
