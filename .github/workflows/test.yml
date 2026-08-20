@@ -1,4 +1,4 @@
-name: Test any push to any branch
+name: Build and Test
 on: [push]
 env:
   build_type: RELEASE
