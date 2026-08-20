@@ -8,6 +8,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install gcc 14 
+        # needed for some C23, namely stdckint.h. Can be removed when ubuntu-latest becomes 26.04
+        run: |
+          sudo apt update
+          sudo apt install gcc-14
+          sudo update-alternatives --set gcc /usr/bin/gcc-14
+
       - name: Checkout branch
         uses: actions/checkout@v7
 
