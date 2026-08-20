@@ -6,7 +6,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Change default version to GCC 14
         # GCC 14 is already installed
@@ -14,15 +13,7 @@ jobs:
         run: |
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100
           sudo update-alternatives --set gcc /usr/bin/gcc-14
-
-      - name: Checkout branch
-        uses: actions/checkout@v7
-
-      - name: Configure CMake
-        run: cmake -B ${{env.build_directory}} -DCMAKE_BUILD_TYPE=${{env.build_type}}
-
-      - name: Build all
-        run: cmake --build ${{env.build_directory}} --config ${{env.build_type}}
-
-      - name: Run tests
-        run: ctest --test-dir ${{env.build_directory}}
+      - uses: actions/checkout@v7
+      - run: cmake -B ${{env.build_directory}} -DCMAKE_BUILD_TYPE=${{env.build_type}}
+      - run: cmake --build ${{env.build_directory}} --config ${{env.build_type}}
+      - run: ctest --test-dir ${{env.build_directory}}
