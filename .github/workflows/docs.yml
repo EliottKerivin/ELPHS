@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v7
       - run: cmake -B ${{env.build_directory}} -DDOXYGEN_OUTPUT_DIRECTORY=${{env.docs_dir}}
       - run: cmake --build ${{env.build_directory}} -t ${{env.docs_target}}
-      - uses: actions/upload-pages-artefact@v5
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: ${{env.docs_dir}}
 
