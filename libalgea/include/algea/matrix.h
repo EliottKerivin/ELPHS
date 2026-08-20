@@ -1,6 +1,8 @@
 /*!
   @file
   This file defines the ALGEA_MATRIX type and assorted methods.
+  @addtogroup ALGEA
+  @{
 */
 /*! @defgroup matrices Matrix algebra
   @{
@@ -109,6 +111,7 @@ ALGEA_CODES ALGEAmatrixMultiply(
     const ALGEA_MATRIX *A /*!< Left hand ALGEA_MATRIX */,
     const ALGEA_MATRIX *B /*!< Right hand ALGEA_MATRIX */);
 
+/*! @} */
 /*! @} */
 
 #endif
