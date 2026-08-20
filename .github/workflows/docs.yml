@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 env:
   build_directory: ${{github.workspace}}/build
-  docs_target: algea-docs
+  docs_target: docs
   docs_dir: ${{github.workspace}}/docs
 jobs:
   build:
