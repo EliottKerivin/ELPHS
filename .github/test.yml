@@ -1,0 +1,21 @@
+name: Test any push to any branch
+on: [push]
+env:
+  build_type: RELEASE
+  build_directory: ${{github.workspace}}/build
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+
+      - name: Configure CMake
+        run: cmake -B ${{env.build_directory}} -DCMAKE_BUILD_TYPE=${{env.build_type}}
+
+      - name: Build all
+      - run: cmake --build
+
+      - name: Run tests
+        run: ctest --test-dir ${{env.build_directory}}
