@@ -1,0 +1,5 @@
+/*!
+@page implementation Implementation Notes
+Here, we discuss certain choices made, as well as algorithms implemented
+@subpage algea-impl
+*/

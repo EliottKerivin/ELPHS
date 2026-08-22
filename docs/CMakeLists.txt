@@ -9,6 +9,7 @@ FetchContent_MakeAvailable(doxygen-awesome-css)
 # This allows us to get the path to doxygen-awesome.css
 FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
 
+set(API_INC_DIRS "${CMAKE_SOURCE_DIR}/libalgea/include")
 
 set(DOXYGEN_EXTRACT_STATIC YES)
 set(DOXYGEN_OPTIMIZE_OUTPUT_FOR_C YES)
@@ -18,5 +19,8 @@ set(DOXYGEN_SORT_MEMBER_DOCS NO)
 set(DOXYGEN_GENERATE_TREEVIEW YES)
 set(DOXYGEN_DISABLE_INDEX NO)
 set(DOXYGEN_FULL_SIDEBAR NO)
+set(DOXYGEN_USE_MATHJAX YES)
+set(DOXYGEN_STRIP_FROM_INC_PATH "${API_INC_DIRS}")
+set(DOXYGEN_LAYOUT_FILE DoxygenLayout.xml)
 set(DOXYGEN_HTML_EXTRA_STYLESHEET "${AWESOME_CSS_DIR}/doxygen-awesome.css" "${AWESOME_CSS_DIR}/doxygen-awesome-sidebar-only.css")
-doxygen_add_docs(docs "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/libalgea/include")
+doxygen_add_docs(docs "${CMAKE_CURRENT_SOURCE_DIR}" "${API_INC_DIRS}")

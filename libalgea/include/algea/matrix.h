@@ -30,10 +30,14 @@ typedef enum {
 typedef double ALGEA_ELEMENT;
 
 //! Matrix type containing size and coordinates
+/*!
+  Stores the matrix's size, as well as a one dimensional array of all its
+  coordinates. They are stored in row-major order, matching C's convention.
+  */
 typedef struct {
-  size_t rows;
-  size_t columns;
-  ALGEA_ELEMENT *x;
+  size_t rows;      /*!< Number of rows */
+  size_t columns;   /*!< Number of columns */
+  ALGEA_ELEMENT *x; /*!< Array of elements */
 } ALGEA_MATRIX;
 
 //! Returns a newly allocated ALGEA_MATRIX
@@ -42,7 +46,7 @@ typedef struct {
   ALGEAdeleteMatrix(). The coordinates are not zero initialized.
 
   @p rows * @p columns * @p sizeof(ALGEA_ELEMENT) must be less than @p SIZE_MAX,
-  else the allocation fails
+  else the allocation fails.
 
   @returns A pointer to a new ALGEA_MATRIX if successful, @p nullptr otherwise
 */
