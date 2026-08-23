@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #define test(t)                                                                \
   do {                                                                         \
     if (!(t)) {                                                                \
