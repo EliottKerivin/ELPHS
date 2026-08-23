@@ -4,30 +4,14 @@
   @addtogroup ALGEA
   @{
 */
-/*! @defgroup matrices Matrix algebra
-  @{
-*/
 
 #ifndef ALGEA_MATRIX_H
 #define ALGEA_MATRIX_H
 
+#include "algea/element.h"
+#include "algea/errors.h"
+
 #include <stddef.h>
-
-//! All possible return codes from non-allocating functions
-/*!
-  All functions that do not return a newly allocated object return a code. If
-  the return value is a newly allocated object, than an error is indicated with
-  a return value of @p nullptr
-*/
-typedef enum {
-  ALGEA_OK,           //!< Everything worked
-  ALGEA_ERROR,        //!< A generic error has occured
-  ALGEA_DIM_MISMATCH, //!< Some of the arguments had mismatched dimensions
-  ALGEA_ALLOC_FAILED, //!< Couldn't allocate memory in the function
-} ALGEA_CODES;
-
-//! Type of an element of an ALGEA_MATRIX
-typedef double ALGEA_ELEMENT;
 
 //! Matrix type containing size and coordinates
 /*!
@@ -134,7 +118,5 @@ ALGEA_CODES ALGEAmatrixMultiply(
     const ALGEA_MATRIX *A /*!< Left hand ALGEA_MATRIX */,
     const ALGEA_MATRIX *B /*!< Right hand ALGEA_MATRIX */);
 
-/*! @} */
-/*! @} */
-
 #endif
+/*! @} */
