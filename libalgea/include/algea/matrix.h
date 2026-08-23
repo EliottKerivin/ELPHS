@@ -43,7 +43,8 @@ typedef struct {
 //! Returns a newly allocated ALGEA_MATRIX
 /*!
   Returns a dynamically allocated matrix which must be freed using
-  ALGEAdeleteMatrix(). The coordinates are not zero initialized.
+  ALGEAdeleteMatrix(). The coordinates are not zero initialized. Both dimensions
+  must be greater than zero
 
   @p rows * @p columns * @p sizeof(ALGEA_ELEMENT) must be less than @p SIZE_MAX,
   else the allocation fails.
@@ -51,6 +52,18 @@ typedef struct {
   @returns A pointer to a new ALGEA_MATRIX if successful, @p nullptr otherwise
 */
 ALGEA_MATRIX *ALGEAnewMatrix(size_t rows, size_t columns);
+
+//! Retuns a newly allocated matrix, where each element is zeroed
+/*!
+  It has the same behavior as ALGEAnewMatrix(), except that each element of the
+  array is set to zero.
+  @note Note that as it simply sets all the bytes of @p x to zero, the standard
+  does not guarantee that it is zero (this however is true on all commonly used
+  platforms, see <a
+  href="https://en.cppreference.com/c/memory/calloc">calloc()</a>, Notes
+  section).
+*/
+ALGEA_MATRIX *ALGEAnewZeroedMatrix(size_t rows, size_t columns);
 
 //! Copies @p src into @p dest
 /*!
@@ -76,6 +89,12 @@ void ALGEAdeleteMatrix(ALGEA_MATRIX *m);
 
 //! Sets all the value of @p m to @p val
 /*!
+  @note Note that as it simply sets all the bytes of @p x to zero, the standard
+  does not guarantee that it is zero (this however is true on all commonly used
+  platforms, see <a
+  href="https://en.cppreference.com/c/memory/calloc">calloc()</a>, Notes
+  section).
+
   @returns ALGEA_OK
 */
 ALGEA_CODES ALGEAsetMatrix(ALGEA_MATRIX *m, ALGEA_ELEMENT val);
@@ -102,13 +121,13 @@ bool ALGEAmatrixEqual(const ALGEA_MATRIX *A, const ALGEA_MATRIX *B);
 
 //! Performs ALGEA_MATRIX multiplication
 /*!
-  Performs ALGEA_MATRIX multiplication. @p result may point to the same
-  matrix as @p A or @p B.
+  Performs ALGEA_MATRIX multiplication, overwriting the contents of @p result
+  (but not its shape). @p result may point to the same matrix as @p A or @p B.
 
   @returns
   - ALGEA_OK if the multiplication is successful
-  - ALGEA_DIM_MISMATCH if the operands aren't compatible
-  -ALGEA_ALLOC_FAILED if internal memory allocations failed
+  - ALGEA_DIM_MISMATCH if the operands or result aren't compatible
+  - ALGEA_ALLOC_FAILED if internal memory allocations failed
 */
 ALGEA_CODES ALGEAmatrixMultiply(
     ALGEA_MATRIX *result /*!< ALGEA_MATRIX to store the result */,
