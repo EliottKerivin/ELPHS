@@ -1,5 +1,5 @@
 /*!
 @page implementation Implementation Notes
-Here, we discuss certain choices made, as well as algorithms implemented
+Here, we discuss certain choices made, as well as algorithms implemented, for the interested reader. Normally, none of the information should be relevant to an end user, as it purely documents internal choices in how various functions are implemented, with a discussion of the chosen solution.
 @subpage algea-impl
 */
