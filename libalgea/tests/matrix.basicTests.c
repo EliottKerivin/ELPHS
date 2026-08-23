@@ -2,7 +2,6 @@
 #include "test.h"
 
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 int main() {
@@ -30,11 +29,16 @@ int main() {
   ALGEA_MATRIX *C = ALGEAduplicateMatrix(A);
   test(ALGEAmatrixEqual(A, C));
 
+  ALGEAsetMatrix(C, 29.63);
+  for (size_t i = 0; i < C->rows * C->columns; ++i) test(C->x[i] == 29.63);
   ALGEAsetMatrix(C, 0);
   for (size_t i = 0; i < C->rows * C->columns; ++i) test(C->x[i] == 0);
+  ALGEA_MATRIX *D = ALGEAnewZeroedMatrix(C->rows, C->columns);
+  test(ALGEAmatrixEqual(C, D));
 
   (void)ALGEAdeleteMatrix(A);
   (void)ALGEAdeleteMatrix(B);
   (void)ALGEAdeleteMatrix(C);
+  (void)ALGEAdeleteMatrix(D);
   exit(EXIT_SUCCESS);
 }
