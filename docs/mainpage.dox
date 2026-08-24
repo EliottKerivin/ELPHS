@@ -1,3 +1,4 @@
-/*! @mainpage
+/*! @mainpage Hi
   ELPHS documentation :D
+  To get started, it is recommended to read @ref conventions for some general usage guidance. @ref implementation notes is mostly for any curious souls, and is not necessary, though it might provide some interesting insights.
 */

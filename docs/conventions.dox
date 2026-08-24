@@ -1,0 +1,13 @@
+/*!
+  @page conventions Conventions
+  This page groups some conventions used throughout this codebase, to make using it easier.
+  @section names Naming Conventions
+  - All headers should be included as "name/header.h", (e.g. "algea/matrix.h").
+  - All type names are of the form NAME_TYPE (e.g. ALGEA_ELEMENT).
+  - All functions are of the form NAMEfooBar() (e.g. ALGEAmatrixMultiply()).
+  @section members Data members
+  This section groups the rules regarding accessing the fields of the structures defined. All code is written assuming these rules are respected.
+  - All members should only be modified through accessor functions.
+  - Members affixed with an underscore shouldn't be read other than through an accessor function.
+  - Other members may be read (though it is still recommended to use the relevant accessing).
+*/

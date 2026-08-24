@@ -8,4 +8,9 @@ ALGEA_MATRIX contains a one dimensional array of coordinates, paired with a @p r
 The loop order chosen is @p i, @p k, @p j. The reason for this is that as the matrices are row major, the rightmost index varies fastest, which is to say that neighbor column indices are neighbors in memory (for the same row, of course). As @p j is always the rightmost index, it should be in the inner loop to take advantage of the cache, then @p k appears once as the column index, and @p i never does, @p i should be in the outer loop.
 
 Special care also needed when the result matrix overlaps with one of the arguments, as otherwise the factors will vary during the operation. As it is not supported to access the memory otherwise than through the owner matrix, it is sufficient to verify the ALGEA_MATRIX pointers do not overlap. If they do, the repeated matrix can simply be copied. Only one copy is ever made, as if both matrices overlap with result, then they are the same. Then, the routine where the result is separate can then simply be applied with the copied matrix.
+
+@section tri-solve Tridiagonal matrix solving
+@subsection thomas Thomas' algorithm
+If a matrix is triadiagonal, then specializd algorithms to solve it exist, among which is Thomas' algorithm. However, it is only guaranteed stable if the matrix is symmetric positive definite or diagonnaly dominant. In this case, diagonally dominant means that @f$|a_{ij}| \ge |a_{i,j-1}| + |a_{i,j+1}|@f$ (with the formula obviously adapted for the two extermities). It can thus be checked that the condition is verified in @f$\mathcal O(n)@f$ time, and if it isn't, to fall back on a more general if slighlty less efficient algorithm.
+@sa <a href="https://en.wikipedia.org/wiki/Tridiagonal_matrix_algorithm#cite_note-Niyogi2006-1">Tridiagonal matrix algorithm</a> on Wikipedia.
 */
