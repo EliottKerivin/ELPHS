@@ -16,13 +16,13 @@ int main() {
   // Accessing
   ALGEA_MATRIX *B = ALGEAnewMatrix(2, 3);
   for (size_t i = 0; i < 6; ++i) {
-    A->x[i] = i;
-    B->x[i] = i;
+    A->x_[i] = i;
+    B->x_[i] = i;
   }
-  test(*ALGEAat(A, 0, 0) == 0);
-  test(*ALGEAat(A, 1, 1) == 3);
-  test(*ALGEAat(B, 1, 0) == 3);
-  test(*ALGEAat(B, 1, 1) == 4);
+  test(ALGEAat(A, 0, 0) == 0);
+  test(ALGEAat(A, 1, 1) == 3);
+  test(ALGEAat(B, 1, 0) == 3);
+  test(ALGEAat(B, 1, 1) == 4);
 
   // Equality
   test(!ALGEAmatrixEqual(A, B));
@@ -30,9 +30,9 @@ int main() {
   test(ALGEAmatrixEqual(A, C));
 
   ALGEAsetMatrix(C, 29.63);
-  for (size_t i = 0; i < C->rows * C->columns; ++i) test(C->x[i] == 29.63);
+  for (size_t i = 0; i < C->rows * C->columns; ++i) test(C->x_[i] == 29.63);
   ALGEAsetMatrix(C, 0);
-  for (size_t i = 0; i < C->rows * C->columns; ++i) test(C->x[i] == 0);
+  for (size_t i = 0; i < C->rows * C->columns; ++i) test(C->x_[i] == 0);
   ALGEA_MATRIX *D = ALGEAnewZeroedMatrix(C->rows, C->columns);
   test(ALGEAmatrixEqual(C, D));
 

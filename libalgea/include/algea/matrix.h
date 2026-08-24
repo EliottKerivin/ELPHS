@@ -19,9 +19,9 @@
   coordinates. They are stored in row-major order, matching C's convention.
   */
 typedef struct {
-  size_t rows;      /*!< Number of rows */
-  size_t columns;   /*!< Number of columns */
-  ALGEA_ELEMENT *x; /*!< Array of elements */
+  size_t rows;       /*!< Number of rows */
+  size_t columns;    /*!< Number of columns */
+  ALGEA_ELEMENT *x_; /*!< @private Array of elements */
 } ALGEA_MATRIX;
 
 //! Returns a newly allocated ALGEA_MATRIX
@@ -83,15 +83,29 @@ void ALGEAdeleteMatrix(ALGEA_MATRIX *m);
 */
 ALGEA_CODES ALGEAsetMatrix(ALGEA_MATRIX *m, ALGEA_ELEMENT val);
 
-//! Retrieves a pointer to an ALGEA_ELEMENT from an ALGEA_MATRIX
+//! Retrieves a value from an ALGEA_MATRIX
 /*!
-  @returns Pointer to the element of @p m, i.e. of type ALGEA_ELEMENT *
+  This function is only used to access a value. To change it, use ALGEAset()
+  @returns The element requested
 */
-static inline ALGEA_ELEMENT *ALGEAat(
+static inline ALGEA_ELEMENT ALGEAat(
     const ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
     size_t i /*!< Row number */,
     size_t j /*!< Column number */) {
-  return m->x + m->columns * i + j;
+  return m->x_[m->columns * i + j];
+}
+
+//! Changes the value of the element to @p val
+/*!
+  @return ALGEA_OK
+*/
+static inline ALGEA_CODES ALGEAset(
+    ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
+    size_t i /*!< Row number */,
+    size_t j /*! Column number */,
+    ALGEA_ELEMENT val /*!< New value */) {
+  m->x_[m->columns * i + j] = val;
+  return ALGEA_OK;
 }
 
 //! Verifies if two ALGEA_MATRIX are numerically equal

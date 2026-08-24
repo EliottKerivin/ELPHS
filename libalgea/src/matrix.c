@@ -28,7 +28,7 @@ static ALGEA_MATRIX *allocateMatrix(size_t rows,
   m->rows = rows;
   m->columns = columns;
   // allocate memory for the array of coordinates
-  if (!(m->x = allocator(bytes))) {
+  if (!(m->x_ = allocator(bytes))) {
     // memory allocation failed, free previously allocated memory as well
     free(m);
     return nullptr;
@@ -52,7 +52,7 @@ ALGEA_MATRIX *ALGEAnewZeroedMatrix(size_t rows, size_t columns) {
 ALGEA_CODES ALGEAcopyMatrix(ALGEA_MATRIX *dest, const ALGEA_MATRIX *src) {
   if (dest->rows != src->rows || dest->columns != src->columns)
     return ALGEA_DIM_MISMATCH;
-  memcpy(dest->x, src->x, src->rows * src->columns * sizeof(ALGEA_ELEMENT));
+  memcpy(dest->x_, src->x_, src->rows * src->columns * sizeof(ALGEA_ELEMENT));
   return ALGEA_OK;
 }
 
@@ -65,7 +65,7 @@ ALGEA_MATRIX *ALGEAduplicateMatrix(const ALGEA_MATRIX *src) {
 }
 
 void ALGEAdeleteMatrix(ALGEA_MATRIX *m) {
-  free(m->x);
+  free(m->x_);
   free(m);
 }
 
@@ -75,10 +75,10 @@ ALGEA_CODES ALGEAsetMatrix(ALGEA_MATRIX *m, ALGEA_ELEMENT val) {
   // case, zeroing is probably the most common operation, so that's good
   // (assuming IEEE 754, see header comment)
   if (val == 0) {
-    memset(m->x, 0, m->rows * m->columns * sizeof(ALGEA_ELEMENT));
+    memset(m->x_, 0, m->rows * m->columns * sizeof(ALGEA_ELEMENT));
   } else {
     size_t len = m->rows * m->columns;
-    for (size_t i = 0; i < len; ++i) m->x[i] = val;
+    for (size_t i = 0; i < len; ++i) m->x_[i] = val;
   }
   return ALGEA_OK;
 }
@@ -87,7 +87,7 @@ bool ALGEAmatrixEqual(const ALGEA_MATRIX *A, const ALGEA_MATRIX *B) {
   if (A->rows != B->rows || A->columns != B->columns) return false;
   size_t len = A->rows * A->columns;
   for (size_t i = 0; i < len; ++i)
-    if (A->x[i] != B->x[i]) return false;
+    if (A->x_[i] != B->x_[i]) return false;
   return true;
 }
 
@@ -102,7 +102,10 @@ static ALGEA_CODES matrixMultiplyDistinctResult(
   for (size_t i = 0; i < result->rows; ++i) {
     for (size_t k = 0; k < A->columns; ++k) {
       for (size_t j = 0; j < result->columns; ++j) {
-        *ALGEAat(result, i, j) += *ALGEAat(A, i, k) * *ALGEAat(B, k, j);
+        ALGEAset(result,
+                 i,
+                 j,
+                 ALGEAat(result, i, j) + ALGEAat(A, i, k) * ALGEAat(B, k, j));
       }
     }
   }
