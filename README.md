@@ -4,6 +4,9 @@ This project is my first large(-ish) project, entirely left to my own devices. I
 
 The name is courtesy of my little sister.
 
+## Requirements
+The code here is written with C23 in mind. Normally, it should mostly be standard compliant, though some reasonable (and documented) assumptions are made, for example that IEEE 754 floating point arithmetic is also supported. It might work on platforms other than Linux, but this isn't tested (not that it's guaranteed to work on Linux, though it is developed on Fedora). Also, [CMake](https://cmake.org) is required for building, and [Doxygen](https://doxygen.nl) is used for the documentation. However, this last one is not required.
+
 ## Documentation
 Here's the link to the [documentation](https://EliottKerivin.github.io/ELPHS).
 
