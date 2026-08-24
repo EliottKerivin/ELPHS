@@ -1,3 +1,6 @@
+#ifndef ALGEA_MATRIX_H
+#define ALGEA_MATRIX_H
+
 /*!
   @file
   This file defines the ALGEA_MATRIX type and assorted methods.
@@ -5,14 +8,18 @@
   @{
 */
 
-#ifndef ALGEA_MATRIX_H
-#define ALGEA_MATRIX_H
-
 #include "algea/element.h"
 #include "algea/errors.h"
 
 #include <stddef.h>
 
+//! @addtogroup matrix_management Matrix management
+//!@{
+/*!
+  The functions here are to be used to manage the lifetime of an ALGEA_MATRIX.
+  They all allocate an ALGEA_MATRIX and return it to the user (or a @p nullptr
+  in case of an error), which has to be freed using ALGEAdeleteMatrix()
+*/
 //! Matrix type containing size and coordinates
 /*!
   Stores the matrix's size, as well as a one dimensional array of all its
@@ -21,7 +28,7 @@
 typedef struct {
   size_t rows;       /*!< Number of rows */
   size_t columns;    /*!< Number of columns */
-  ALGEA_ELEMENT *x_; /*!< @private Array of elements */
+  ALGEA_ELEMENT *x_; /*!< Array of elements */
 } ALGEA_MATRIX;
 
 //! Returns a newly allocated ALGEA_MATRIX
@@ -49,16 +56,6 @@ ALGEA_MATRIX *ALGEAnewMatrix(size_t rows, size_t columns);
 */
 ALGEA_MATRIX *ALGEAnewZeroedMatrix(size_t rows, size_t columns);
 
-//! Copies @p src into @p dest
-/*!
-  Copies @p src into @p dest, overwriting the contents of @p dest->x (but  not
-  @p dest->rows or @p dest->columns).
-
-  @returns
-  - ALGEA_OK if successful
-  - ALGEA_DIM_MISMATCH if @p dest is not the same shape as @p src
-*/
-ALGEA_CODES ALGEAcopyMatrix(ALGEA_MATRIX *dest, const ALGEA_MATRIX *src);
 //! Duplicates the argument
 /*!
   Duplicates @p m by allocating a new ALGEA_MATRIX which will need to be
@@ -70,6 +67,88 @@ ALGEA_MATRIX *ALGEAduplicateMatrix(const ALGEA_MATRIX *src);
 
 //! Deletes an ALGEA_MATRIX allocated with ALGEAnewMatrix()
 void ALGEAdeleteMatrix(ALGEA_MATRIX *m);
+
+//! @}
+
+//! @addtogroup matrix_accessors Matrix accessors
+//! @{
+
+//! Checks if an index pair (@p i, @p j) is valid for the matrix @p m
+/*!
+  @returns @p false if the index pair is valid, @p true otherwise
+*/
+static inline bool ALGEAmatrixOutOfBounds(const ALGEA_MATRIX *m,
+                                          size_t i,
+                                          size_t j) {
+  return i >= m->rows || j >= m->columns;
+}
+
+//! Retrieves a value from an ALGEA_MATRIX
+/*!
+  This function is only used to access a value. To change it, use ALGEAset()
+  @returns The element requested
+*/
+static inline ALGEA_ELEMENT ALGEAat(
+    const ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
+    size_t i /*!< Row number */,
+    size_t j /*!< Column number */) {
+#ifndef ALGEA_NO_BOUNDS_CHECKING
+  if (ALGEAmatrixOutOfBounds(m, i, j))
+    ALGEAhandleBoundsOverflow("Bounds overflow");
+#endif
+  return m->x_[m->columns * i + j];
+}
+
+//! Retrieves a value from an ALGEA_MATRIX with bound checking
+/*!
+  This function is only used to access a value. To change it, use ALGEAset()
+  @returns The element requested
+*/
+static inline ALGEA_ELEMENT ALGEAatSafe(
+    const ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
+    size_t i /*!< Row number */,
+    size_t j /*!< Column number */) {
+  if (ALGEAmatrixOutOfBounds(m, i, j))
+    ALGEAhandleBoundsOverflow("Bounds overflow");
+  return m->x_[m->columns * i + j];
+}
+
+//! Changes the value of the element to @p val
+/*!
+  @return ALGEA_OK
+*/
+static inline ALGEA_CODES ALGEAset(
+    ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
+    size_t i /*!< Row number */,
+    size_t j /*! Column number */,
+    ALGEA_ELEMENT val /*!< New value */) {
+#ifndef ALGEA_NO_BOUNDS_CHECKING
+  if (ALGEAmatrixOutOfBounds(m, i, j))
+    ALGEAhandleBoundsOverflow("Bounds overflow");
+#endif
+  m->x_[m->columns * i + j] = val;
+  return ALGEA_OK;
+}
+
+//! Changes the value of the element to @p val
+/*!
+  @return ALGEA_OK
+*/
+static inline ALGEA_CODES ALGEAsetSafe(
+    ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
+    size_t i /*!< Row number */,
+    size_t j /*! Column number */,
+    ALGEA_ELEMENT val /*!< New value */) {
+  if (ALGEAmatrixOutOfBounds(m, i, j))
+    ALGEAhandleBoundsOverflow("Bounds overflow");
+
+  return ALGEA_OK;
+}
+
+//! @}
+
+//! @addtogroup matrix_operations Matrix operations
+//! @{
 
 //! Sets all the value of @p m to @p val
 /*!
@@ -83,30 +162,16 @@ void ALGEAdeleteMatrix(ALGEA_MATRIX *m);
 */
 ALGEA_CODES ALGEAsetMatrix(ALGEA_MATRIX *m, ALGEA_ELEMENT val);
 
-//! Retrieves a value from an ALGEA_MATRIX
+//! Copies @p src into @p dest
 /*!
-  This function is only used to access a value. To change it, use ALGEAset()
-  @returns The element requested
-*/
-static inline ALGEA_ELEMENT ALGEAat(
-    const ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
-    size_t i /*!< Row number */,
-    size_t j /*!< Column number */) {
-  return m->x_[m->columns * i + j];
-}
+  Copies @p src into @p dest, overwriting the contents of @p dest->x (but  not
+  @p dest->rows or @p dest->columns).
 
-//! Changes the value of the element to @p val
-/*!
-  @return ALGEA_OK
+  @returns
+  - ALGEA_OK if successful
+  - ALGEA_DIM_MISMATCH if @p dest is not the same shape as @p src
 */
-static inline ALGEA_CODES ALGEAset(
-    ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
-    size_t i /*!< Row number */,
-    size_t j /*! Column number */,
-    ALGEA_ELEMENT val /*!< New value */) {
-  m->x_[m->columns * i + j] = val;
-  return ALGEA_OK;
-}
+ALGEA_CODES ALGEAcopyMatrix(ALGEA_MATRIX *dest, const ALGEA_MATRIX *src);
 
 //! Verifies if two ALGEA_MATRIX are numerically equal
 /*!
@@ -132,5 +197,8 @@ ALGEA_CODES ALGEAmatrixMultiply(
     const ALGEA_MATRIX *A /*!< Left hand ALGEA_MATRIX */,
     const ALGEA_MATRIX *B /*!< Right hand ALGEA_MATRIX */);
 
-#endif
-/*! @} */
+//! @}
+
+//! @}
+
+#endif // ALGEA_MATRIX_H

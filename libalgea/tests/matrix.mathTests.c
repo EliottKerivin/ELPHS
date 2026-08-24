@@ -7,7 +7,7 @@ int main() {
   ALGEA_MATRIX *R1 = ALGEAnewMatrix(3, 3);
   ALGEA_MATRIX *R2 = ALGEAnewMatrix(2, 2);
 
-  for (size_t i = 0; i < I->columns + 1; ++i) ALGEAset(I, i, i, 1);
+  for (size_t i = 0; i < I->columns; ++i) ALGEAset(I, i, i, 1);
   ALGEA_ELEMENT x1[] = {3, 4, 5, 9, 14, 19, 15, 24, 33};
   for (size_t i = 0; i < R1->rows * R1->columns; ++i) R1->x_[i] = x1[i];
   ALGEA_ELEMENT x2[] = {10, 13, 28, 40};

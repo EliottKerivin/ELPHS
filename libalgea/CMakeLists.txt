@@ -1,6 +1,6 @@
 add_library(algea STATIC)
 
-set(sources matrix.c)
+set(sources matrix.c errors.c)
 list(TRANSFORM sources PREPEND src/)
 
 target_sources(algea PRIVATE ${sources}) 
