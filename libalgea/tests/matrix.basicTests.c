@@ -1,4 +1,5 @@
 #include "algea/matrix.h"
+#include "algea/element.h"
 #include "algea/errors.h"
 #include "test.h"
 
@@ -17,13 +18,9 @@ int main() {
   A = ALGEAnewMatrix(3, 2);
   test(A->rows == 3 && A->columns == 2);
 
-  // Check error handler
-  ALGEAsetBoundsOverflowHandler(handler);
-  ALGEAat(A, 2, 2); // one past end, should still be valid memory
-  test(check);
-
   // Accessing
   ALGEA_MATRIX *B = ALGEAnewMatrix(2, 3);
+
   for (size_t i = 0; i < 6; ++i) {
     A->x_[i] = i;
     B->x_[i] = i;
@@ -44,6 +41,15 @@ int main() {
   for (size_t i = 0; i < C->rows * C->columns; ++i) test(C->x_[i] == 0);
   ALGEA_MATRIX *D = ALGEAnewZeroedMatrix(C->rows, C->columns);
   test(ALGEAmatrixEqual(C, D));
+
+  // Check error handler
+  // This should of course never be done in real code :D, but to prevent a
+  // segfault it's necessary
+  free(A->x_);
+  A->x_ = malloc(15 * sizeof(ALGEA_ELEMENT));
+  ALGEAsetBoundsOverflowHandler(handler);
+  ALGEAat(A, 2, 2); // one past end (as we didn't update rows or columns)
+  test(check);
 
   (void)ALGEAdeleteMatrix(A);
   (void)ALGEAdeleteMatrix(B);
