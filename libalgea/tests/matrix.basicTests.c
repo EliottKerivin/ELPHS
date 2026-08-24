@@ -48,7 +48,7 @@ int main() {
   free(A->x_);
   A->x_ = malloc(15 * sizeof(ALGEA_ELEMENT));
   ALGEAsetBoundsOverflowHandler(handler);
-  ALGEAat(A, 2, 2); // one past end (as we didn't update rows or columns)
+  ALGEAatSafe(A, 2, 2); // one past end (as we didn't update rows or columns)
   test(check);
 
   (void)ALGEAdeleteMatrix(A);
