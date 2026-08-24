@@ -1,5 +1,10 @@
 add_library(algea STATIC)
 
+target_compile_definitions(algea PUBLIC $<$<CONFIG:RELEASE>:ALGEA_NO_BOUNDS_CHECKING>)
+# We don't want the implementation to have bounds checking, it's just for external code. 
+# Ours is supposed to be safe
+target_compile_definitions(algea PRIVATE ALGEA_NO_BOUNDS_CHECKING)
+
 set(sources matrix.c errors.c)
 list(TRANSFORM sources PREPEND src/)
 

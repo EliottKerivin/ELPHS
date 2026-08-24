@@ -45,6 +45,7 @@ int main() {
   // Check error handler
   // This should of course never be done in real code :D, but to prevent a
   // segfault it's necessary
+#undef ALGEA_NO_BOUNDS_CHECKING
   free(A->x_);
   A->x_ = malloc(15 * sizeof(ALGEA_ELEMENT));
   ALGEAsetBoundsOverflowHandler(handler);
