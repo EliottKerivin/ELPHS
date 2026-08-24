@@ -94,7 +94,7 @@ static inline ALGEA_ELEMENT ALGEAat(
     size_t j /*!< Column number */) {
 #ifndef ALGEA_NO_BOUNDS_CHECKING
   if (ALGEAmatrixOutOfBounds(m, i, j))
-    ALGEAhandleBoundsOverflow("Bounds overflow");
+    ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);
 #endif
   return m->x_[m->columns * i + j];
 }
@@ -109,7 +109,7 @@ static inline ALGEA_ELEMENT ALGEAatSafe(
     size_t i /*!< Row number */,
     size_t j /*!< Column number */) {
   if (ALGEAmatrixOutOfBounds(m, i, j))
-    ALGEAhandleBoundsOverflow("Bounds overflow");
+    ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);
   return m->x_[m->columns * i + j];
 }
 
@@ -124,7 +124,7 @@ static inline ALGEA_CODES ALGEAset(
     ALGEA_ELEMENT val /*!< New value */) {
 #ifndef ALGEA_NO_BOUNDS_CHECKING
   if (ALGEAmatrixOutOfBounds(m, i, j))
-    ALGEAhandleBoundsOverflow("Bounds overflow");
+    ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);
 #endif
   m->x_[m->columns * i + j] = val;
   return ALGEA_OK;
@@ -140,7 +140,7 @@ static inline ALGEA_CODES ALGEAsetSafe(
     size_t j /*! Column number */,
     ALGEA_ELEMENT val /*!< New value */) {
   if (ALGEAmatrixOutOfBounds(m, i, j))
-    ALGEAhandleBoundsOverflow("Bounds overflow");
+    ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);
 
   return ALGEA_OK;
 }

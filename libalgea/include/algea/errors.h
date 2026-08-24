@@ -20,9 +20,25 @@ typedef enum {
                       //!< never arrive to the user)
 } ALGEA_CODES;
 
+//! Function pointer type to overflow handlers, which must match this signature
+typedef void (*ALGEA_BOUNDS_OVERFLOW_HANDLER)(const char[] /*!< Message */,
+                                              const char[] /*!< File */,
+                                              int /*!< Line */);
+
+//! Changes the overflow handler
+/*!
+  Changes the overflow handler to @p handler, and returns the previous handler
+  so as to be able to (re)store it if necessary
+  @returns Previous overflow handler
+*/
+ALGEA_BOUNDS_OVERFLOW_HANDLER ALGEAsetBoundsOverflowHandler(
+    ALGEA_BOUNDS_OVERFLOW_HANDLER handler /*!< New overflow handler */);
+
 //! Handle a bounds overflow
 void ALGEAhandleBoundsOverflow(
-    const char message[] /*!< Message to output to @p stderr */);
+    const char message[] /*!< Message to output to @p stderr */,
+    const char file[] /*!< File in which the error occured */,
+    int line /*!< Line at which the error occured */);
 
 //! @}
 //! @}

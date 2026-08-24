@@ -1,8 +1,12 @@
 #include "algea/matrix.h"
+#include "algea/errors.h"
 #include "test.h"
 
 #include <stdint.h>
 #include <stdlib.h>
+
+static int check = 0;
+void handler(const char[], const char[], int x) { check = x; }
 
 int main() {
   // Allocation
@@ -12,6 +16,11 @@ int main() {
   test(A == nullptr);
   A = ALGEAnewMatrix(3, 2);
   test(A->rows == 3 && A->columns == 2);
+
+  // Check error handler
+  ALGEAsetBoundsOverflowHandler(handler);
+  ALGEAat(A, 2, 2); // one past end, should still be valid memory
+  test(check);
 
   // Accessing
   ALGEA_MATRIX *B = ALGEAnewMatrix(2, 3);
