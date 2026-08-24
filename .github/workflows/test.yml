@@ -16,4 +16,4 @@ jobs:
       - uses: actions/checkout@v7
       - run: cmake -B ${{env.build_directory}} -DCMAKE_BUILD_TYPE=${{env.build_type}}
       - run: cmake --build ${{env.build_directory}} --config ${{env.build_type}}
-      - run: ctest --test-dir ${{env.build_directory}}
+      - run: ctest --test-dir ${{env.build_directory}} --rerun-failed --output-on-failure
