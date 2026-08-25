@@ -141,7 +141,7 @@ static inline ALGEA_CODES ALGEAsetSafe(
     ALGEA_ELEMENT val /*!< New value */) {
   if (ALGEAmatrixOutOfBounds(m, i, j))
     ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);
-
+  m->x_[m->columns * i + j] = val;
   return ALGEA_OK;
 }
 

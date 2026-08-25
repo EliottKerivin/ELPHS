@@ -4,6 +4,7 @@ target_compile_definitions(algea PUBLIC $<$<CONFIG:RELEASE>:ALGEA_NO_BOUNDS_CHEC
 # We don't want the implementation to have bounds checking, it's just for external code. 
 # Ours is supposed to be safe
 target_compile_definitions(algea PRIVATE ALGEA_NO_BOUNDS_CHECKING)
+target_compile_features(algea PUBLIC c_std_23)
 
 set(sources matrix.c errors.c)
 list(TRANSFORM sources PREPEND src/)
