@@ -13,12 +13,13 @@
 
 #include <stddef.h>
 
-//! @addtogroup matrix_management Matrix management
-//!@{
-/*!
+/*! @addtogroup matrix_management Matrix management
+  @brief Allocate and deallocate matrices
+
   The functions here are to be used to manage the lifetime of an ALGEA_MATRIX.
   They all allocate an ALGEA_MATRIX and return it to the user (or a @p nullptr
   in case of an error), which has to be freed using ALGEAdeleteMatrix()
+  @{
 */
 //! Matrix type containing size and coordinates
 /*!

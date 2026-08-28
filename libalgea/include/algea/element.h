@@ -12,7 +12,7 @@
 */
 
 //! Type of a coordinate
-typedef double ALGEA_ELEMENT;
+typedef _Complex double ALGEA_ELEMENT;
 
 //! @}
 //! @}
