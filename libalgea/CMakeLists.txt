@@ -10,8 +10,7 @@ set(sources matrix.c errors.c)
 list(TRANSFORM sources PREPEND src/)
 
 target_sources(algea PRIVATE ${sources}) 
-target_include_directories(algea PUBLIC include)
-target_include_directories(algea PRIVATE src)
+target_include_directories(algea PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 if(BUILD_TESTING)
   add_executable(matrix.basicTests tests/matrix.basicTests.c)
