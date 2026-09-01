@@ -1,0 +1,9 @@
+Language: Cpp
+BasedOnStyle: LLVM
+BinPackParameters: false
+BinPackArguments: true
+BreakAfterReturnType: Automatic
+PenaltyReturnTypeOnItsOwnLine: 1000
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+PackConstructorInitializers: CurrentLine

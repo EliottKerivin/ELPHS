@@ -1,0 +1,35 @@
+---
+Checks:
+  - -*
+  - clang-diagnostic-*
+  - clang-analyzer-*
+  - bugprone-*
+  - misc-*
+  - performance-*
+  - readability-*
+  - portability-*
+  - -readability-identifier-length
+  - -bugprone-easily-swappable-parameters
+  - -bugprone-assignment-in-if-condition
+  - -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling
+WarningsAsErrors: ''
+HeaderFileExtensions:
+  - ''
+  - h
+  - hh
+  - hpp
+  - hxx
+ImplementationFileExtensions:
+  - c
+  - cc
+  - cpp
+  - cxx
+HeaderFilterRegex: '.*'
+ExcludeHeaderFilterRegex: ''
+FormatStyle:     none
+User:            eliott
+CheckOptions: 
+  readability-braces-around-statements.ShortStatementLines: 1
+SystemHeaders:   false
+...
+
