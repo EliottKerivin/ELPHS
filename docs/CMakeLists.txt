@@ -9,7 +9,9 @@ FetchContent_MakeAvailable(doxygen-awesome-css)
 # This allows us to get the path to doxygen-awesome.css
 FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
 
-set(API_INC_DIRS "${CMAKE_SOURCE_DIR}/libalgea/include")
+set(API_INC_DIRS 
+  "${CMAKE_SOURCE_DIR}/libalgea/include" 
+  "${CMAKE_SOURCE_DIR}/libnima/include")
 
 set(DOXYGEN_EXTRACT_STATIC YES)
 set(DOXYGEN_EXTRACT_PRIVATE YES)

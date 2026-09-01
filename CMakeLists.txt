@@ -8,3 +8,4 @@ if(Doxygen_FOUND)
 endif()
 
 add_subdirectory(libalgea)
+add_subdirectory(libnima)
