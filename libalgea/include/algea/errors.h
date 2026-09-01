@@ -13,14 +13,31 @@
 //! All possible return codes for non allocating functions
 
 typedef enum {
-  ALGEA_OK = 0,       //!< Function was successful
-  ALGEA_ERROR,        //!< Generic error
-  ALGEA_DIM_MISMATCH, //!< Argument dimensions aren't compatible
-  ALGEA_ALLOC_FAILED, //!< Internal allocation failed (this allocation would
-                      //!< never arrive to the user)
+  ALGEA_OK = 0,           //!< Function was successful
+  ALGEA_ERROR,            //!< Generic error
+  ALGEA_DIM_MISMATCH,     //!< Argument dimensions aren't compatible
+  ALGEA_ALLOC_FAILED,     //!< Internal allocation failed (this allocation would
+                          //!< never arrive to the user)
+  ALGEA_INVALID_OUT,      //!< If the output parameter is invalid
+  ALGEA_INVALID_ARGUMENT, //!< If an argument is incorrect
+  ALGEA_OVERFLOW,         //!< An excessive size caused an overflow
 } ALGEA_CODES;
 
-//! Function pointer type to overflow handlers, which must match this signature
+#ifndef ALGEA_NO_BOUNDS_CHECKING
+#include <float.h>
+#define ALGEA_CHECK_BOUNDS(nRows, nColumns, row, column)                       \
+  do {                                                                         \
+    if ((row) >= (nRows) || (column) >= (nColumns)) {                          \
+      ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);        \
+      return NAN;                                                              \
+    }                                                                          \
+  } while (false)
+#else
+#define ALGEA_CHECK_BOUNDS(nRows, nColumns, row, column) ((void)0)
+#endif
+
+//! Function pointer type to overflow handlers, which must match this
+//! signature
 typedef void (*ALGEA_BOUNDS_OVERFLOW_HANDLER)(const char[] /*!< Message */,
                                               const char[] /*!< File */,
                                               int /*!< Line */);

@@ -13,7 +13,7 @@
 
 #include <stddef.h>
 
-/*! @addtogroup matrix_management Matrix management
+/*! @defgroup matrix_management Matrix management
   @brief Allocate and deallocate matrices
 
   The functions here are to be used to manage the lifetime of an ALGEA_MATRIX.
@@ -71,18 +71,8 @@ void ALGEAdeleteMatrix(ALGEA_MATRIX *m);
 
 //! @}
 
-//! @addtogroup matrix_accessors Matrix accessors
+//! @defgroup matrix_accessors Matrix accessors
 //! @{
-
-//! Checks if an index pair (@p i, @p j) is valid for the matrix @p m
-/*!
-  @returns @p false if the index pair is valid, @p true otherwise
-*/
-static inline bool ALGEAmatrixOutOfBounds(const ALGEA_MATRIX *m,
-                                          size_t i,
-                                          size_t j) {
-  return i >= m->rows || j >= m->columns;
-}
 
 //! Retrieves a value from an ALGEA_MATRIX
 /*!
@@ -93,24 +83,7 @@ static inline ALGEA_ELEMENT ALGEAat(
     const ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
     size_t i /*!< Row number */,
     size_t j /*!< Column number */) {
-#ifndef ALGEA_NO_BOUNDS_CHECKING
-  if (ALGEAmatrixOutOfBounds(m, i, j))
-    ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);
-#endif
-  return m->x_[m->columns * i + j];
-}
-
-//! Retrieves a value from an ALGEA_MATRIX with bound checking
-/*!
-  This function is only used to access a value. To change it, use ALGEAset()
-  @returns The element requested
-*/
-static inline ALGEA_ELEMENT ALGEAatSafe(
-    const ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
-    size_t i /*!< Row number */,
-    size_t j /*!< Column number */) {
-  if (ALGEAmatrixOutOfBounds(m, i, j))
-    ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);
+  ALGEA_CHECK_BOUNDS(m->rows, m->columns, i, j);
   return m->x_[m->columns * i + j];
 }
 
@@ -123,32 +96,14 @@ static inline ALGEA_CODES ALGEAset(
     size_t i /*!< Row number */,
     size_t j /*! Column number */,
     ALGEA_ELEMENT val /*!< New value */) {
-#ifndef ALGEA_NO_BOUNDS_CHECKING
-  if (ALGEAmatrixOutOfBounds(m, i, j))
-    ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);
-#endif
-  m->x_[m->columns * i + j] = val;
-  return ALGEA_OK;
-}
-
-//! Changes the value of the element to @p val
-/*!
-  @return ALGEA_OK
-*/
-static inline ALGEA_CODES ALGEAsetSafe(
-    ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
-    size_t i /*!< Row number */,
-    size_t j /*! Column number */,
-    ALGEA_ELEMENT val /*!< New value */) {
-  if (ALGEAmatrixOutOfBounds(m, i, j))
-    ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);
+  ALGEA_CHECK_BOUNDS(m->rows, m->columns, i, j);
   m->x_[m->columns * i + j] = val;
   return ALGEA_OK;
 }
 
 //! @}
 
-//! @addtogroup matrix_operations Matrix operations
+//! @defgroup matrix_operations Matrix operations
 //! @{
 
 //! Sets all the value of @p m to @p val
