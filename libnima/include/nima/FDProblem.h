@@ -6,7 +6,7 @@
   various finite difference methods (Euler, Crank-Nicolson, etc.).
   @addtogroup nima NIMA
   @{
-  @addtogroup fd Finite differences
+  @defgroup fd Finite differences
   @{
 */
 
@@ -24,7 +24,7 @@
 typedef struct NIMA_FDPROBLEM_STRUCT NIMA_FDPROBLEM;
 
 /*!
-  @addtogroup nima-fd-management Lifetime management
+  @defgroup nima-fd-management Lifetime management
   @{
 */
 

@@ -5,7 +5,7 @@
   Defines the various error codes possibly returned by non allocating functions
   @addtogroup nima
   @{
-  @addtogroup errors Error management
+  @defgroup nima-errors Error management
   @{
 */
 

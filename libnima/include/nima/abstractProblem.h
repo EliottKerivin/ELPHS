@@ -7,7 +7,7 @@
   using this library
   @addtogroup nima
   @{
-  @addtogroup mathematical-formulation Mathematical formulation
+  @defgroup mathematical-formulation Mathematical formulation
   @{
 */
 
@@ -27,7 +27,7 @@
 typedef struct NIMA_ABSTRACT_PROBLEM_STRUCT NIMA_ABSTRACT_PROBLEM;
 
 /*!
-  @addtogroup abstract-problem-management Lifetime management
+  @defgroup abstract-problem-management Lifetime management
   @{
 */
 
@@ -69,13 +69,6 @@ void NIMAdeleteAbstractProblem(NIMA_ABSTRACT_PROBLEM *problem);
 
 //! @} abstract-problem-management
 
-/*!
-  @addtogroup abstract-problem-manipulators Manipulators
-  Getters and setters as appropriate
-  @{
-*/
-
-//! @} manipulators
 //! @} mathematical-formulation
 //! @} nima
 

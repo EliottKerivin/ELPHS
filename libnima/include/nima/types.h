@@ -6,7 +6,7 @@
   Defines the types used to represent the problem
   @addtogroup nima
   @{
-  @addtogroup types Types
+  @defgroup types Types
   @{
 */
 

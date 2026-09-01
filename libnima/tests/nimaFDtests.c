@@ -26,10 +26,12 @@ int main() {
   test(NIMAnewFDProblem(&fdp, ap, 5, 5), NIMA_OK);
 
   test(fdp->problem == ap, true);
+  // 5 points => 4 intervals
   test(fdp->spaceStep == 1. / 4, true);
   test(fdp->timeStep == 1. / 5, true);
   test(fdp->initialConditions[4] == initialValue, true);
 
   NIMAdeleteAbstractProblem(ap);
+  NIMAdeleteFDProblem(fdp);
   exit(EXIT_SUCCESS);
 }
