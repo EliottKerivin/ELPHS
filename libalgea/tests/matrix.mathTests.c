@@ -23,22 +23,22 @@ int main() {
   ALGEA_MATRIX *C = ALGEAnewMatrix(3, 3);
   ALGEA_MATRIX *D = ALGEAnewMatrix(2, 2);
 
-  test(!ALGEAmatrixMultiply(C, A, B));
-  test(ALGEAmatrixEqual(C, R1));
-  test(!ALGEAmatrixMultiply(D, B, A));
-  test(ALGEAmatrixEqual(D, R2));
+  test(ALGEAmatrixMultiply(C, A, B), false);
+  test(ALGEAmatrixEqual(C, R1), true);
+  test(ALGEAmatrixMultiply(D, B, A), false);
+  test(ALGEAmatrixEqual(D, R2), true);
 
-  test(!ALGEAmatrixMultiply(C, R1, I));
-  test(ALGEAmatrixEqual(C, R1));
-  test(!ALGEAmatrixMultiply(C, I, R1));
-  test(ALGEAmatrixEqual(R1, C));
+  test(ALGEAmatrixMultiply(C, R1, I), false);
+  test(ALGEAmatrixEqual(C, R1), true);
+  test(ALGEAmatrixMultiply(C, I, R1), false);
+  test(ALGEAmatrixEqual(R1, C), true);
 
-  test(!ALGEAmatrixMultiply(C, R1, R1));
-  test(!ALGEAmatrixMultiply(R1, R1, R1));
-  test(ALGEAmatrixEqual(C, R1));
+  test(ALGEAmatrixMultiply(C, R1, R1), false);
+  test(ALGEAmatrixMultiply(R1, R1, R1), false);
+  test(ALGEAmatrixEqual(C, R1), true);
 
-  test(!ALGEAmatrixMultiply(R1, O, R1));
-  test(ALGEAmatrixEqual(R1, O));
+  test(ALGEAmatrixMultiply(R1, O, R1), false);
+  test(ALGEAmatrixEqual(R1, O), true);
 
   ALGEAdeleteMatrix(I);
   ALGEAdeleteMatrix(O);
