@@ -1,0 +1,24 @@
+/*!
+@page crank-nicolson Crank-Nicolson
+Here, we describe the Crank-Nicolson method and its implementation. We may consider the problem
+@f[ \frac{\partial u}{\partial t} = F\left( x, t, u, \frac{\partial u}{\partial x}, \frac{\partial^2 u}{\partial x^2} \right). @f]
+
+We first define a grid with timesteps @f$ \Delta t @f$ and spatial steps of @f$ \Delta x @f$. This allows us to define @f$ u_i^j = u(i\Delta x, j\Delta t) @f$ (assuming the grid starts at zero, which is always possible, and is not required by the implementation but is used here). Then the general Crank-Nicolson method is to use
+@f[ \frac{u_i^{j+1} - u_i^j}{\Delta t} = \frac12 \left[ F\left((i+1)\Delta x, (j+1) \Delta t, u_i^{j+1}, \frac{\partial u_i^{j+1}}{\partial x}, \frac{\partial^2 u_i^{j+1}}{\partial x^2}\right) + F\left(i\Delta x, j \Delta t, u_i^{j}, \frac{\partial u_i^{j}}{\partial x}, \frac{\partial^2 u_i^{j}}{\partial x^2}\right)\right]. @f]
+
+Note that, in this project, we retrict @f$ F @f$ to linear combinations of @f$ u @f$ and its derivatives. We can then use the following approximations
+@f{align*}{ 
+\frac{\partial u_i^j}{\partial x} & = \frac{u_{i+1}^j - u_{i-1}^j}{2\Delta x}, \\
+\frac{\partial^2 u_i^j}{\partial x^2} & = \frac{u_{i+1}^j - 2u_i^j + u_{i-1}^j}{(\Delta x)^2}.
+@f}
+
+Using the linear form of @f$ F @f$ that we imposed and reorganizing yields
+@f[ a_i^{j+1} + b_i^{j+1} u_i^{j+1} + c_i^{j+1} \frac{u_{i+1}^{j+1} - u_{i-1}^{j+1}}{2\Delta x} +  d_i^{j+1} \frac{u_{i+1}^{j+1} - 2u_i^{j+1} + u_{i-1}^{j+1}}{(\Delta x)^2} - 2\frac{u_i^{j+1}}{\Delta t} = - a_i^j - b_i u_i^j - c_i^j \frac{u_{i+1}^j - d_i^j u_{i-1}^j}{2\Delta x} - d_i^j \frac{u_{i+1}^j - 2 u_i^j + u_{i-1}^j}{(\Delta x)^2}  - 2\frac{u_i^j}{\Delta t}. @f]
+
+As this is a (tridiagonal) system of linear equations, it can be written under matrix form. To make this evident, the left hand side can be rewritten (the same applies to the right hand side, of course) as
+@f[ u_{i-1}^{j+1}\left( \frac{d_i^{j+1}}{(\Delta x)^2} - \frac{c_i^{j+1}}{2\Delta x} \right) + u_i^{j+1} \left( -\frac{2}{\Delta t} - \frac{2d_i^{j+1}}{(\Delta x)^2} - \frac{c_i^{j+1}}{2\Delta x} + b_i^{j+1} \right) + u_{i+1}^{j+1} \left( \frac{d_i^{j+1}}{(\Delta x)^2} + \frac{c_i^{j+1}}{2\Delta x} \right). @f]
+
+This gives us a tridiagonal matrix representing the system of equations which can then be solved using the Thomas algorithm. Indeed, the right hand side is known thanks to our previous computations, so we can simply compute the value for each position in space and solve it.
+
+@sa <a href="https://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method">Wikipedia</a>
+*/ 
