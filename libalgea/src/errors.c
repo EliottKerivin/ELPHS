@@ -3,9 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void defaultOverflowHandler(const char message[], const char file[], int line) {
+static void defaultOverflowHandler(const char message[],
+                                   const char file[],
+                                   int line) {
   fprintf(stderr, "%s (%s:%i)\n", message, file, line);
-  abort();
 }
 static ALGEA_BOUNDS_OVERFLOW_HANDLER ALGEAoverflowHandler =
     defaultOverflowHandler;
@@ -21,4 +22,5 @@ void ALGEAhandleBoundsOverflow(const char message[],
                                const char file[],
                                int line) {
   ALGEAoverflowHandler(message, file, line);
+  exit(EXIT_FAILURE);
 }
