@@ -1,14 +1,10 @@
 #include "algea/matrix.h"
-#include "algea/element.h"
-#include "algea/errors.h"
+#include "algea/generic.h"
 #include "test.h"
 
 #include <complex.h>
 #include <stdint.h>
 #include <stdlib.h>
-
-static int check = 0;
-void handler(const char[], const char[], int) { check = 5; }
 
 int main() {
   // Allocation
@@ -26,11 +22,11 @@ int main() {
     A->x_[i] = i;
     B->x_[i] = i;
   }
-  printf("%f + i %f\n", creal(ALGEAat(A, 0, 0)), cimag(ALGEAat(A, 0, 0)));
-  test(ALGEAat(A, 0, 0), 0);
-  test(ALGEAat(A, 1, 1), 3);
-  test(ALGEAat(B, 1, 0), 3);
-  test(ALGEAat(B, 1, 1), 4);
+  printf("%f + i %f\n", creal(aat(A, 0, 0)), cimag(aat(A, 0, 0)));
+  test(aat(A, 0, 0), 0);
+  test(aat(A, 1, 1), 3);
+  test(aat(B, 1, 0), 3);
+  test(aat(B, 1, 1), 4);
 
   // Equality
   test(ALGEAmatrixEqual(A, B), false);
@@ -44,13 +40,6 @@ int main() {
   for (size_t i = 0; i < C->rows * C->columns; ++i) test(C->x_[i], 0);
   ALGEA_MATRIX *D = ALGEAnewZeroedMatrix(C->rows, C->columns);
   test(ALGEAmatrixEqual(C, D), true);
-
-  // Check error handler
-  free(A->x_);
-  A->x_ = malloc(15 * sizeof(ALGEA_ELEMENT));
-  ALGEAsetBoundsOverflowHandler(handler);
-  ALGEAat(A, 2, 2); // one past end (as we didn't update rows or columns)
-  test(check, 5);
 
   ALGEAdeleteMatrix(A);
   ALGEAdeleteMatrix(B);

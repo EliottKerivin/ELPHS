@@ -1,6 +1,8 @@
 #include "algea/tridiagonal.h"
 #include "algea/errors.h"
+#include "algea/generic.h"
 #include "test.h"
+#include <complex.h>
 #include <stdint.h>
 
 int main() {
@@ -12,17 +14,20 @@ int main() {
   test(ALGEAnewTridiagonal(&tri, SIZE_MAX, SIZE_MAX), ALGEA_OVERFLOW);
   test(ALGEAnewTridiagonal(&tri, 3, 7), ALGEA_OK);
 
-  for (size_t i = 0; i < 2; ++i) {
-    tri->upper_[i] = 1, tri->middle_[i] = 2, tri->lower_[i] = 3;
+  for (int i = 0; i < 3; ++i) {
+    tri->upper_[i] = i + 1;
+    tri->middle_[i] = (i + 1) * I;
   }
-  tri->middle_[2] = 2;
+  for (int i = 0; i < 2; ++i) tri->lower_[i] = -(i + 1);
 
-  test(ALGEAtat(tri, 0, 0) == 2, true);
-  test(ALGEAtat(tri, 2, 2) == 2, true);
-  test(ALGEAtat(tri, 0, 1) == 1, true);
-  test(ALGEAtat(tri, 1, 0) == 3, true);
-  test(ALGEAtat(tri, 2, 4) == 0, true);
-  test(ALGEAtat(tri, 2, 6) == 0, true);
+  test(aat(tri, 0, 0) == I, true);
+  test(aat(tri, 2, 2) == 3 * I, true);
+  test(aat(tri, 0, 1) == 1, true);
+  test(aat(tri, 1, 0) == -1, true);
+  test(aat(tri, 1, 2) == 2, true);
+  test(aat(tri, 2, 1) == -2, true);
+  test(aat(tri, 2, 4) == 0, true);
+  test(aat(tri, 2, 6) == 0, true);
 
   ALGEAdeleteTridiagonal(tri);
   exit(EXIT_SUCCESS);
