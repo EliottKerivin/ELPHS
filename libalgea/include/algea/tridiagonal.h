@@ -1,9 +1,14 @@
 #ifndef ALGEA_TRIDIAGONAL_H
 #define ALGEA_TRIDIAGONAL_H
 
+// NEEDS WORK! INDEED, DOESN'T REALLY SUPPORT NON SQUARE MATRICES, WHICH SHOULD
+// BE FIXED! Namely, consider 3x5 and 5x3 to notice the diagonal sizes!
+
 /*!
   @file
   This file defines the necessary types and routines to use tridiagonal matrices
+  Maybe make upper/middle/lower easier to access, e.g. with a macro UPPER(i) ->
+  i, i+1?
   @addtogroup ALGEA
   @{
   @defgroup algea-tri Triadiagonal matrices
@@ -12,6 +17,9 @@
 
 #include "algea/element.h"
 #include "algea/errors.h"
+#include "algea/vector.h"
+
+typedef struct ALGEA_VECTOR_STRUCT ALGEA_VECTOR;
 
 #include <stddef.h>
 
@@ -21,6 +29,7 @@ typedef struct ALGEA_TRIDIAGONAL_STRUCT {
   ALGEA_ELEMENT *upper_;
   ALGEA_ELEMENT *middle_;
   ALGEA_ELEMENT *lower_;
+  ALGEA_ELEMENT scratch_, constScratch_;
 } ALGEA_TRIDIAGONAL;
 
 /*!
@@ -56,6 +65,13 @@ void ALGEAdeleteTridiagonal(ALGEA_TRIDIAGONAL *tri);
   @{
 */
 
+static inline size_t ALGEAtrows(const ALGEA_TRIDIAGONAL *tri) {
+  return tri->rows;
+}
+static inline size_t ALGEAtcolumns(const ALGEA_TRIDIAGONAL *tri) {
+  return tri->columns;
+}
+
 //! Accesses the element at row @p i and column @p j
 /*!
   Accesses the element at row @p i and column @p j (0-indexed). If
@@ -66,18 +82,64 @@ void ALGEAdeleteTridiagonal(ALGEA_TRIDIAGONAL *tri);
 
   @returns The requested element, or @p NaN in case of overflow
 */
-static inline ALGEA_ELEMENT ALGEAtat(ALGEA_TRIDIAGONAL *tri,
-                                     size_t i,
-                                     size_t j) {
+static inline const ALGEA_ELEMENT *ALGEActat(const ALGEA_TRIDIAGONAL *tri,
+                                             size_t i,
+                                             size_t j) {
   ALGEA_CHECK_BOUNDS(tri->rows, tri->columns, i, j);
-  if (i + 1 == j) return tri->upper_[j];
-  if (i == j) return tri->middle_[i];
-  if (i == j + 1) return tri->lower_[j];
+  if (j >= 1 && i == j - 1) return tri->upper_ + i;
+  if (i == j) return tri->middle_ + i;
+  if (i >= 1 && i - 1 == j) return tri->lower_ + j;
   // off diagonal
-  return 0;
+  return &(tri->constScratch_);
+}
+
+//! Returns a modifiable lvalue to the requested element
+/*!
+  Returns a modifiable lvalue. However, if the value is off of the three
+  diagonals, assigning is a no-op.
+  */
+static inline ALGEA_ELEMENT *ALGEAtat(ALGEA_TRIDIAGONAL *tri,
+                                      size_t i,
+                                      size_t j) {
+  ALGEA_CHECK_BOUNDS(tri->rows, tri->columns, i, j);
+  if (j >= 1 && i == j - 1) return tri->upper_ + i;
+  if (i == j) return tri->middle_ + i;
+  if (i >= 1 && i - 1 == j) return tri->lower_ + j;
+  // off diagonal
+  return &(tri->scratch_);
 }
 
 //! @} algea-tri-accessors
+
+/*!
+  @defgroup Equation solving
+  @{
+*/
+
+//! Solves a tridiagonal system using the Thomas algorithm
+/*!
+  Solves the tridiagonal system of equations  @f$ A\vec x = \vec b @f$ (@f$ A
+  @f$ tridiagonal) using the Thomas algorithm. It does not check that the
+  conditions for the algorithm hold [probably in another function in the future
+  or something]
+  @sa <a
+  href="https://en.wikipedia.org/wiki/Tridiagonal_matrix_algorithm">Thomas
+  algorithm</a>
+
+  @param[out] sol The vector which will contain the solution. It must have been
+  allocated previously and be of the right size. It may not overlap with @p b
+  @param[in] A The matrix representing the system to be solved
+  @param[in] b The right hand side vector
+
+  @returns
+  - ALGEA_OK if successful
+  - ALGEA_INVALID_ARGUMENT if any of the dimensions do not match
+  - ALGEA_ALLOC_FAILED if an internal allocation fails
+*/
+
+ALGEA_CODES ALGEAtriThomas(ALGEA_VECTOR *x,
+                           const ALGEA_TRIDIAGONAL *A,
+                           const ALGEA_VECTOR *b);
 
 //! @} algea-tri
 //! @} algea
