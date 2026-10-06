@@ -24,12 +24,10 @@ typedef enum {
 } ALGEA_CODES;
 
 #ifndef ALGEA_NO_BOUNDS_CHECKING
-#include <float.h>
 #define ALGEA_CHECK_BOUNDS(nRows, nColumns, row, column)                       \
   do {                                                                         \
     if ((row) >= (nRows) || (column) >= (nColumns)) {                          \
       ALGEAhandleBoundsOverflow("Bounds overflow", __FILE__, __LINE__);        \
-      return NAN;                                                              \
     }                                                                          \
   } while (false)
 #else
