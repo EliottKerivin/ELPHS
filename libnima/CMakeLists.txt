@@ -5,7 +5,7 @@ target_include_directories(nima PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 target_compile_features(nima PUBLIC c_std_23)
 
-set(sources FDProblem.c abstractProblem.c)
+set(sources FDProblem.c abstractProblem.c CrankNicolson.c)
 list(TRANSFORM sources PREPEND src/)
 
 target_sources(nima PRIVATE ${sources}) 

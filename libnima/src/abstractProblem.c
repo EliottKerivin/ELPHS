@@ -37,7 +37,7 @@ NIMA_CODES NIMAnewAbstractProblem(NIMA_ABSTRACT_PROBLEM **problem,
   p->d = d ? d : zeroCoefficient;
   p->leftBound = leftBound, p->rightBound = rightBound;
   p->startTime = startTime, p->endTime = endTime;
-  p->initialConditions =
+  p->initialFunction =
       initialConditions ? initialConditions : zeroInitialCondition;
   // Set out parameter
   *problem = p;

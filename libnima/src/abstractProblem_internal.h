@@ -17,7 +17,43 @@ typedef struct NIMA_ABSTRACT_PROBLEM_STRUCT {
   NIMA_TIME startTime;    //!<  Beginning of the time interval
   NIMA_TIME endTime;      //!<  End time of the time interval
   NIMA_INITIAL_CONDITIONS
-  initialConditions; //!< Initial conditions of the problem
+  initialFunction; //!< Initial conditions of the problem
 } NIMA_ABSTRACT_PROBLEM;
+
+// Accessors so that if I ever change the struct, it doesn't break everything.
+// As they're inline it costs nothing and is future-proof
+
+static inline NIMA_PDE_COEFFICIENT getA(const NIMA_ABSTRACT_PROBLEM *problem) {
+  return problem->a;
+}
+static inline NIMA_PDE_COEFFICIENT getB(const NIMA_ABSTRACT_PROBLEM *problem) {
+  return problem->b;
+}
+static inline NIMA_PDE_COEFFICIENT getC(const NIMA_ABSTRACT_PROBLEM *problem) {
+  return problem->c;
+}
+static inline NIMA_PDE_COEFFICIENT getD(const NIMA_ABSTRACT_PROBLEM *problem) {
+  return problem->d;
+}
+
+static inline NIMA_SPACE getLeftBound(const NIMA_ABSTRACT_PROBLEM *problem) {
+  return problem->leftBound;
+}
+static inline NIMA_SPACE getRightBound(const NIMA_ABSTRACT_PROBLEM *problem) {
+
+  return problem->rightBound;
+}
+
+static inline NIMA_TIME getStartTime(const NIMA_ABSTRACT_PROBLEM *problem) {
+  return problem->startTime;
+}
+static inline NIMA_TIME getEndTime(const NIMA_ABSTRACT_PROBLEM *problem) {
+  return problem->endTime;
+}
+
+static inline NIMA_INITIAL_CONDITIONS getInitialFunction(
+    const NIMA_ABSTRACT_PROBLEM *problem) {
+  return problem->initialFunction;
+}
 
 #endif // NIMA_ABSTRACT_PROBLEM_STRUCT_H
