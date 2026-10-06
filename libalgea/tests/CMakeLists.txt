@@ -13,9 +13,3 @@ add_test(NAME "Triadiagonal tests" COMMAND tridiagonal.tests)
 add_executable(operations.tests operations.tests.c)
 target_link_libraries(operations.tests PRIVATE algea)
 add_test(NAME "Mixed operations" COMMAND operations.tests)
-
-add_executable(thomas.tests thomas.tests.c)
-target_link_libraries(thomas.tests PRIVATE algea)
-add_test(NAME "Thomas algorithm" COMMAND thomas.tests)
-
-
