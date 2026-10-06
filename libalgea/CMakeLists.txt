@@ -6,7 +6,7 @@ target_compile_definitions(algea PUBLIC $<$<CONFIG:RELEASE>:ALGEA_NO_BOUNDS_CHEC
 target_compile_definitions(algea PRIVATE ALGEA_NO_BOUNDS_CHECKING)
 target_compile_features(algea PUBLIC c_std_23)
 
-set(sources matrix.c errors.c tridiagonal.c)
+set(sources matrix.c errors.c tridiagonal.c vector.c operations.c)
 list(TRANSFORM sources PREPEND src/)
 
 target_sources(algea PRIVATE ${sources}) 
