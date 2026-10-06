@@ -31,14 +31,15 @@ NIMA_CODES NIMAnewFDProblem(NIMA_FDPROBLEM **problem,
   fdp->problem = abstractFormulation;
   // -1 because of "théorème de la fourchette"
   fdp->spaceStep =
-      (abstractFormulation->rightBound - abstractFormulation->leftBound) /
+      (getRightBound(abstractFormulation) - getLeftBound(abstractFormulation)) /
       (NIMA_SPACE)(gridPoints - 1);
   fdp->timeStep =
-      (abstractFormulation->endTime - abstractFormulation->startTime) /
+      (getEndTime(abstractFormulation) - getStartTime(abstractFormulation)) /
       (NIMA_TIME)timeSteps;
-  NIMA_SPACE x = abstractFormulation->leftBound;
+  NIMA_SPACE x = getLeftBound(abstractFormulation);
+  NIMA_INITIAL_CONDITIONS f = getInitialFunction(abstractFormulation);
   for (size_t i = 0; i < gridPoints; ++i) {
-    fdp->initialConditions[i] = abstractFormulation->initialConditions(x);
+    fdp->initialConditions[i] = f(x);
     x += fdp->spaceStep;
   }
   *problem = fdp;
