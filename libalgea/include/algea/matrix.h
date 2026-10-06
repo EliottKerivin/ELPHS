@@ -74,24 +74,36 @@ void ALGEAdeleteMatrix(ALGEA_MATRIX *m);
 //! @defgroup matrix_accessors Matrix accessors
 //! @{
 
-//! Retrieves a value from an ALGEA_MATRIX
+static inline size_t ALGEAmrows(ALGEA_MATRIX *matrix) { return matrix->rows; }
+static inline size_t ALGEAmcolumns(ALGEA_MATRIX *matrix) {
+  return matrix->columns;
+}
+
+//! Retrieves a read only value from an ALGEA_MATRIX
 /*!
-  This function is only used to access a value. To change it, use ALGEAset()
+  This function is only used to access a value.
   @returns The element requested
 */
-static inline ALGEA_ELEMENT ALGEAat(
+static inline const ALGEA_ELEMENT *ALGEAcmat(
     const ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
     size_t i /*!< Row number */,
     size_t j /*!< Column number */) {
   ALGEA_CHECK_BOUNDS(m->rows, m->columns, i, j);
-  return m->x_[m->columns * i + j];
+  return m->x_ + m->columns * i + j;
 }
 
 //! Changes the value of the element to @p val
 /*!
-  @return ALGEA_OK
+  Returns an lvalue to the requested element. It may be assigned to using =
 */
-static inline ALGEA_CODES ALGEAset(
+static inline ALGEA_ELEMENT *ALGEAmat(
+    ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
+    size_t i /*!< Row number */,
+    size_t j /*!< Column number */) {
+  ALGEA_CHECK_BOUNDS(m->rows, m->columns, i, j);
+  return m->x_ + m->columns * i + j;
+}
+static inline ALGEA_CODES ALGEAmset(
     ALGEA_MATRIX *m /*!< ALGEA_MATRIX to be accessed */,
     size_t i /*!< Row number */,
     size_t j /*! Column number */,

@@ -1,4 +1,5 @@
 #include "algea/matrix.h"
+#include "algea/generic.h"
 
 #include <stdckdint.h>
 #include <stdint.h>
@@ -19,7 +20,8 @@ static ALGEA_MATRIX *allocateMatrix(size_t rows,
   if (rows == 0 || columns == 0) return nullptr;
   // compute the necessary memory for the array of coordinates, being careful of
   // overflow
-  size_t numberElements, bytes;
+  size_t numberElements;
+  size_t bytes;
   if (ckd_mul(&numberElements, rows, columns)) return nullptr;
   if (ckd_mul(&bytes, numberElements, sizeof(ALGEA_ELEMENT))) return nullptr;
   // allocate memory for the matrix
@@ -50,8 +52,9 @@ ALGEA_MATRIX *ALGEAnewZeroedMatrix(size_t rows, size_t columns) {
 }
 
 ALGEA_CODES ALGEAcopyMatrix(ALGEA_MATRIX *dest, const ALGEA_MATRIX *src) {
-  if (dest->rows != src->rows || dest->columns != src->columns)
+  if (dest->rows != src->rows || dest->columns != src->columns) {
     return ALGEA_DIM_MISMATCH;
+  }
   memcpy(dest->x_, src->x_, src->rows * src->columns * sizeof(ALGEA_ELEMENT));
   return ALGEA_OK;
 }
@@ -86,8 +89,9 @@ ALGEA_CODES ALGEAsetMatrix(ALGEA_MATRIX *m, ALGEA_ELEMENT val) {
 bool ALGEAmatrixEqual(const ALGEA_MATRIX *A, const ALGEA_MATRIX *B) {
   if (A->rows != B->rows || A->columns != B->columns) return false;
   size_t len = A->rows * A->columns;
-  for (size_t i = 0; i < len; ++i)
+  for (size_t i = 0; i < len; ++i) {
     if (A->x_[i] != B->x_[i]) return false;
+  }
   return true;
 }
 
@@ -102,10 +106,7 @@ static ALGEA_CODES matrixMultiplyDistinctResult(
   for (size_t i = 0; i < result->rows; ++i) {
     for (size_t k = 0; k < A->columns; ++k) {
       for (size_t j = 0; j < result->columns; ++j) {
-        ALGEAset(result,
-                 i,
-                 j,
-                 ALGEAat(result, i, j) + ALGEAat(A, i, k) * ALGEAat(B, k, j));
+        aat(result, i, j) += aat(A, i, k) * aat(B, k, j);
       }
     }
   }
@@ -116,8 +117,9 @@ ALGEA_CODES ALGEAmatrixMultiply(ALGEA_MATRIX *result,
                                 const ALGEA_MATRIX *A,
                                 const ALGEA_MATRIX *B) {
   if (result->rows != A->rows || result->columns != B->columns ||
-      A->columns != B->rows)
+      A->columns != B->rows) {
     return ALGEA_DIM_MISMATCH;
+  }
 
   // We assume that there can be no memory overlap, i.e. each ALGEAMatrix owns
   // all of its memory, so pointer checks are sufficient to verify no overlap
