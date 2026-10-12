@@ -1,14 +1,11 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+pub mod dense;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+/// Defines the various error codes that can be returned by functions
+#[derive(Debug, PartialEq, Eq)]
+pub enum MatrixErrors {
+    /// The size of the allocation needed to create this matrix exceeds what
+    /// can be represented with the used size type
+    DimensionOverflow,
+    /// Some the arguments are invalid, e.g. nonsensical dimensions
+    InvalidArguments,
 }
