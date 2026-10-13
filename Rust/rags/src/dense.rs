@@ -5,7 +5,7 @@ use crate::MatrixErrors;
 
 use num_traits::{One, Zero};
 
-use std::iter::zip;
+use std::iter::{Iterator, zip};
 use std::ops::Add;
 
 /// Indexing type
@@ -98,6 +98,37 @@ impl<T: Add<Output = T> + Zero> Add<Self> for Matrix<T> {
     }
 }
 
+/// Iterator over the elements of a Matrix
+///
+/// Iterates over the elements of a Matrix in row major order, which is to say
+/// the entire first row, then the second, etc., consuming said matrix
+pub struct IntoIter<T> {
+    iter: std::vec::IntoIter<T>,
+}
+
+impl<T> IntoIter<T> {
+    pub fn new(m: Matrix<T>) -> Self {
+        IntoIter {
+            iter: m.elements.into_iter(),
+        }
+    }
+}
+
+impl<T> Iterator for IntoIter<T> {
+    type Item = T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
+    }
+}
+
+impl<T> IntoIterator for Matrix<T> {
+    type Item = T;
+    type IntoIter = IntoIter<T>;
+    fn into_iter(self) -> Self::IntoIter {
+        IntoIter::new(self)
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -166,5 +197,18 @@ mod test {
                 elements: vec![0, 0, 0, 0, 0, 1, 2, 3, 0, 2, 4, 6]
             })
         );
+    }
+
+    #[test]
+    fn iterators() {
+        let mut m = Matrix::<Index>::from_fn(3, 5, |i, j| i + j)
+            .unwrap()
+            .into_iter();
+        for i in 0..3 {
+            for j in 0..5 {
+                assert_eq!(Some(i + j), m.next());
+            }
+        }
+        assert_eq!(None, m.next());
     }
 }
