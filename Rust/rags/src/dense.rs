@@ -57,6 +57,16 @@ impl<T> Matrix<T> {
     pub fn columns(&self) -> Index {
         self.columns
     }
+
+    /// Return an iterator over the elements of the matrix, in row major order
+    pub fn iter(&'_ self) -> Iter<'_, T> {
+        Iter::new(self)
+    }
+
+    /// Return a mutable iterator over the elements of the matrix, in row major order
+    pub fn iter_mut(&'_ mut self) -> IterMut<'_, T> {
+        IterMut::new(self)
+    }
 }
 
 impl<T: Zero> Matrix<T> {
@@ -126,6 +136,44 @@ impl<T> IntoIterator for Matrix<T> {
     type IntoIter = IntoIter<T>;
     fn into_iter(self) -> Self::IntoIter {
         IntoIter::new(self)
+    }
+}
+
+pub struct Iter<'a, T> {
+    iter: std::slice::Iter<'a, T>,
+}
+
+impl<'a, T> Iter<'a, T> {
+    pub fn new(m: &'a Matrix<T>) -> Self {
+        Self {
+            iter: m.elements.iter(),
+        }
+    }
+}
+
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
+    }
+}
+
+pub struct IterMut<'a, T> {
+    iter: std::slice::IterMut<'a, T>,
+}
+
+impl<'a, T> IterMut<'a, T> {
+    pub fn new(m: &'a mut Matrix<T>) -> Self {
+        Self {
+            iter: m.elements.iter_mut(),
+        }
+    }
+}
+
+impl<'a, T> Iterator for IterMut<'a, T> {
+    type Item = &'a mut T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
     }
 }
 
@@ -201,6 +249,7 @@ mod test {
 
     #[test]
     fn iterators() {
+        // into iter
         let mut m = Matrix::<Index>::from_fn(3, 5, |i, j| i + j)
             .unwrap()
             .into_iter();
@@ -210,5 +259,40 @@ mod test {
             }
         }
         assert_eq!(None, m.next());
+
+        // iter
+        let m = Matrix::<Index>::from_fn(3, 5, |i, j| i + j).unwrap();
+        let mut mi = m.iter();
+        for i in 0..3 {
+            for j in 0..5 {
+                assert_eq!(Some(&(i + j)), mi.next());
+            }
+        }
+        assert_eq!(None, mi.next());
+
+        // iter_mut
+        let mut m = Matrix::<Index>::from_fn(3, 5, |i, j| i + j).unwrap();
+        let mut mi = m.iter_mut();
+        for i in 0..3 {
+            for j in 0..5 {
+                assert_eq!(Some(&mut (i + j)), mi.next());
+            }
+        }
+        assert_eq!(None, mi.next());
+
+        // check that iter mut actually modifies the elements correctly
+        for (i, el) in m.iter_mut().enumerate() {
+            *el = i;
+        }
+        let mut k: Index = 0;
+        assert_eq!(
+            m,
+            Matrix::<Index>::from_fn(3, 5, |_i, _j| {
+                let tmp = k;
+                k += 1;
+                tmp
+            })
+            .unwrap()
+        )
     }
 }
