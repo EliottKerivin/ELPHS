@@ -10,6 +10,7 @@ use std::ops::Add;
 
 /// Indexing type
 type Index = usize;
+type Position = [Index; 2];
 
 /// A dense matrix
 ///
@@ -58,6 +59,38 @@ impl<T> Matrix<T> {
         self.columns
     }
 
+    // Helper function to compute the offset of the element at position `position`
+    fn offset(&self, pos: Position) -> Index {
+        let i = pos[0];
+        let j = pos[1];
+        if i >= self.rows || j >= self.columns {
+            panic!(
+                "Index out of bounds, matrix of size {} x {}, asked for element ({}, {})",
+                self.rows(),
+                self.columns(),
+                i,
+                j
+            );
+        }
+        i * self.columns + j
+    }
+
+    /// Returns the requested element
+    ///
+    /// Returns the requested element, while performing bounds checking. Panics
+    /// if the requested index is invalid
+    pub fn get(&self, pos: Position) -> &T {
+        &self.elements[self.offset(pos)]
+    }
+
+    /// Sets the value of the requested element.
+    ///
+    /// Sets the value of the requested element, and performs bounds checking. Panics
+    /// if the requested bound is invalid.
+    pub fn set(&mut self, pos: Position, val: T) {
+        self[pos] = val;
+    }
+
     /// Return an iterator over the elements of the matrix, in row major order
     pub fn iter(&'_ self) -> Iter<'_, T> {
         Iter::new(self)
@@ -66,6 +99,20 @@ impl<T> Matrix<T> {
     /// Return a mutable iterator over the elements of the matrix, in row major order
     pub fn iter_mut(&'_ mut self) -> IterMut<'_, T> {
         IterMut::new(self)
+    }
+}
+
+impl<T> std::ops::Index<Position> for Matrix<T> {
+    type Output = T;
+    fn index(&self, index: Position) -> &Self::Output {
+        self.get(index)
+    }
+}
+
+impl<T> std::ops::IndexMut<Position> for Matrix<T> {
+    fn index_mut(&mut self, index: Position) -> &mut Self::Output {
+        let offset = self.offset(index);
+        &mut self.elements[offset]
     }
 }
 
@@ -294,5 +341,43 @@ mod test {
             })
             .unwrap()
         )
+    }
+
+    // All the accessors internally call `offet()`, so it is sufficient to only test one
+    #[test]
+    #[should_panic(expected = "Index out of bounds")]
+    fn indexing_past_row() {
+        let m = Matrix::<f64>::zeros(29, 63).unwrap(); // f64 for some variety
+        m.offset([29, 12]);
+    }
+    #[test]
+    #[should_panic(expected = "Index out of bounds")]
+    fn indexing_past_column() {
+        let m = Matrix::<f64>::zeros(29, 63).unwrap();
+        m.offset([17, 63]);
+    }
+
+    #[test]
+    fn indexing() {
+        // check accessing, as [] simply calls `get()` it's sufficient to test it
+        let mut m = Matrix::<Index>::zeros(4, 7).unwrap();
+        let mut i = 0;
+        for el in m.iter_mut() {
+            *el = i;
+            i += 1;
+        }
+        println!("{m:?}");
+        assert_eq!(m[[0, 0]], 0);
+        assert_eq!(m[[3, 0]], 21);
+        assert_eq!(m[[1, 6]], 13);
+        assert_eq!(m[[3, 6]], 27);
+
+        // check modifying, as `set()` uses [] it is sufficient to test `set()`
+        m.set([3, 4], 63);
+        assert_eq!(m[[3, 4]], 63);
+        m.set([0, 0], 123);
+        assert_eq!(m[[0, 0]], 123);
+        m.set([3, 6], 999);
+        assert_eq!(m[[3, 6]], 999);
     }
 }
