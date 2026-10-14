@@ -101,7 +101,7 @@ impl<T: Add<Output = T> + Zero> Add<Self> for Matrix<T> {
                 other.columns()
             );
         }
-        for (a, b) in zip(self.elements.iter_mut(), other.elements.into_iter()) {
+        for (a, b) in zip(self.elements.iter_mut(), other.elements) {
             *a = std::mem::replace(a, T::zero()) + b;
         }
         self
