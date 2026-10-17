@@ -10,6 +10,7 @@ use std::ops::Add;
 
 /// Indexing type
 type Index = usize;
+/// Locating type
 type Position = [Index; 2];
 
 /// A dense matrix
