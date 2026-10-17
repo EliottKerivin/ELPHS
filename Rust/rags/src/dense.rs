@@ -6,6 +6,7 @@ use crate::MatrixErrors;
 use num_traits::{One, Zero};
 
 use std::iter::{Iterator, zip};
+use std::mem;
 use std::ops::Add;
 
 /// Indexing type
@@ -140,7 +141,7 @@ impl<T: Zero + One> Matrix<T> {
 impl<T: Add<Output = T> + Zero> Add<Self> for Matrix<T> {
     type Output = Self;
     fn add(mut self, other: Matrix<T>) -> Self::Output {
-        if self.rows() != other.columns() || self.columns() != other.columns() {
+        if self.rows() != other.rows() || self.columns() != other.columns() {
             panic!(
                 "Both operands must have the same dimensions, found {} x {} and {} x {}",
                 self.rows(),
@@ -149,9 +150,7 @@ impl<T: Add<Output = T> + Zero> Add<Self> for Matrix<T> {
                 other.columns()
             );
         }
-        for (a, b) in zip(self.elements.iter_mut(), other.elements) {
-            *a = std::mem::replace(a, T::zero()) + b;
-        }
+        zip(self.iter_mut(), other).for_each(|(a, b)| *a = mem::replace(a, T::zero()) + b);
         self
     }
 }
@@ -380,5 +379,13 @@ mod test {
         assert_eq!(m[[0, 0]], 123);
         m.set([3, 6], 999);
         assert_eq!(m[[3, 6]], 999);
+    }
+
+    #[test]
+    fn operations() {
+        let a = Matrix::from_fn(3, 7, |i, j| i + j).unwrap();
+        let b = Matrix::from_fn(3, 7, |i, _j| i).unwrap();
+        let c = a + b;
+        assert_eq!(c, Matrix::from_fn(3, 7, |i, j| 2 * i + j).unwrap())
     }
 }
