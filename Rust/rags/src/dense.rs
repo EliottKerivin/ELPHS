@@ -15,7 +15,7 @@ type Position = [Index; 2];
 /// A dense matrix
 ///
 /// It contains its dimensions as well as a heap allocated contiguous array of
-/// elements, stored in row major orderc (C style)
+/// elements, stored in row major order (C style)
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Matrix<T> {
     rows: Index,
