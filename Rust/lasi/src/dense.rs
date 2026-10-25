@@ -1,4 +1,4 @@
-//! # rags::dense
+//! # lasi::dense
 //! This module defines the dense matrix type and associated methods.
 
 use crate::MatrixErrors;
