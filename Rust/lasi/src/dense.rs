@@ -1,18 +1,13 @@
 //! # lasi::dense
 //! This module defines the dense matrix type and associated methods.
 
-use crate::MatrixErrors;
+use crate::{Index, MatrixErrors, Position};
 
 use num_traits::{One, Zero};
 
 use std::iter::{Iterator, zip};
 use std::mem;
 use std::ops::Add;
-
-/// Indexing type
-type Index = usize;
-/// Locating type
-type Position = [Index; 2];
 
 /// A dense matrix
 ///

@@ -9,3 +9,8 @@ pub enum MatrixErrors {
     /// Some the arguments are invalid, e.g. nonsensical dimensions
     InvalidArguments,
 }
+
+/// Indexing type
+pub type Index = usize;
+/// Locating type
+pub type Position = [Index; 2];
