@@ -1,4 +1,5 @@
 pub mod dense;
+pub mod sparse;
 
 /// Defines the various error codes that can be returned by functions
 #[derive(Debug, PartialEq, Eq)]
