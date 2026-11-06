@@ -1,0 +1,7 @@
+# Allows for build with latex. If no-deps is not specified, then building 
+# documentation for dependencies fails
+[alias]
+ladoc = "doc --no-deps"
+
+[build]
+rustdocflags = "--html-in-header katex-header.html"
